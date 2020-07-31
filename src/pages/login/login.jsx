@@ -2,6 +2,7 @@ import React from 'react'
 import { Form, Input, Button, Tabs } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './login.less'
+import src from '../../resource/images/2.jpg'
 /* 
 登录路由组件
 */
@@ -12,8 +13,11 @@ function callback(key) {
 const taber = {
     margin:0
 }
-export default class Login extends React.Component {
-    
+
+ class Login extends React.Component {
+    onFinish = values =>{
+        console.log(values)
+    }
     render() {
         return (
             <div className="login">
@@ -24,19 +28,21 @@ export default class Login extends React.Component {
                             <Tabs defaultActiveKey="1" size="large" onChange={callback} animated="true" centered tabBarGutter={20} tabBarStyle={taber}>
                                 <TabPane tab="账号登陆" key="1">
                                     <Form
-                                       
+                                        onFinish={this.onFinish}
                                         name="normal_login"
                                         className="login-form"
                                     >
                                         <Form.Item
                                             style={{margin:'10% 0',backgroundColor:'#eee'}}
-                                            name="用户名"
+                                            name="user_name"
+                                            hasFeedback
+                                            validateStatus="success"
                                             rules={[{ required: true, message: '请输入用户名' }]}
                                         >
                                             <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="用户名" />
                                         </Form.Item>
                                         <Form.Item
-                                            name="密码"
+                                            name="user_password"
                                             rules={[{ required: true, message: '请输入密码' }]}
                                         >
                                             <Input
@@ -53,7 +59,11 @@ export default class Login extends React.Component {
                                     </Form>
                                 </TabPane>
                                 <TabPane tab="扫码登陆" key="2">
-                                    Content of Tab Pane 2
+                                        
+                                        <div className="weixinimg">
+                                            <img src={src} alt="" object-fit="cover"/>
+                                        </div>
+                                        <h3 className="weixinName">使用微信扫码上方二维码登录系统</h3>
                                </TabPane>
                             </Tabs>
                         </div>
@@ -65,3 +75,4 @@ export default class Login extends React.Component {
         )
     }
 }
+export default Login
