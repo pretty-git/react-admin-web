@@ -17,6 +17,7 @@ const taber = {
  class Login extends React.Component {
     onFinish = values =>{
         console.log(values)
+        // 阻止事件的默认行为
     }
     render() {
         return (
