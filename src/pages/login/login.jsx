@@ -3,6 +3,7 @@ import { Form, Input, Button, Tabs } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './login.less'
 import src from '../../resource/images/2.jpg'
+import {reqLogin} from '../../api'
 /* 
 登录路由组件
 */
@@ -17,7 +18,7 @@ const taber = {
  class Login extends React.Component {
     onFinish = values =>{
         console.log(values)
-        // 阻止事件的默认行为
+        reqLogin(values.user_name, values.user_password)
     }
     render() {
         return (

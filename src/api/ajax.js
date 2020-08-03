@@ -13,7 +13,7 @@ export default function ajax(url, data={}, type='GET') {
           ID: 12345
         }
       }) */
-    if(type == 'GET') {
+    if(type === 'GET' || type === 'get') {
         return axios.get(url,{  // 配置对象
             params:data // 指定参数
         })
