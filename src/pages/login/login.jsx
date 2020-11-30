@@ -4,9 +4,6 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './login.less'
 import src from '../../resource/images/2.jpg'
 import {reqLogin} from '../../api'
-/* 
-登录路由组件
-*/
 const { TabPane } = Tabs;
 function callback(key) {
     console.log(key);
