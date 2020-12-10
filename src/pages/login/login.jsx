@@ -14,8 +14,9 @@ const taber = {
 
  class Login extends React.Component {
     onFinish = values =>{
-        console.log(values)
-        reqLogin(values.user_name, values.user_password)
+        reqLogin(values.user_name, values.user_password).then(res=>{
+            console.log(res)
+        })
     }
     render() {
         return (
@@ -34,15 +35,14 @@ const taber = {
                                         <Form.Item
                                             style={{margin:'10% 0',backgroundColor:'#eee'}}
                                             name="user_name"
-                                            hasFeedback
-                                            validateStatus="success"
                                             rules={[{ required: true, message: '请输入用户名' }]}
                                         >
                                             <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="用户名" />
                                         </Form.Item>
                                         <Form.Item
                                             name="user_password"
-                                            rules={[{ required: true, message: '请输入密码' }]}
+                                            rules={[{ required: true, message: '请输入密码' },
+                                                    {min:4,message:"至少输入四位"}]}
                                         >
                                             <Input
                                                 prefix={<LockOutlined className="site-form-item-icon" />}
