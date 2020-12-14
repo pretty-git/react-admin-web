@@ -1,9 +1,12 @@
 import React from 'react'
-import { Form, Input, Button, Tabs } from 'antd'
+import { Form, Input, Button, Tabs, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import './login.less'
+import './index.less'
 import src from '../../resource/images/2.jpg'
 import {reqLogin} from '../../api'
+import memoryUtil from '../../utils/memoryUtil.js'
+import storageUtil from '../../utils/storageUtil.js'
+import { Redirect } from 'react-router-dom';
 const { TabPane } = Tabs;
 function callback(key) {
     console.log(key);
@@ -13,12 +16,21 @@ const taber = {
 }
 
  class Login extends React.Component {
-    onFinish = values =>{
-        reqLogin(values.user_name, values.user_password).then(res=>{
-            console.log(res)
-        })
+    onFinish = async value =>{
+        let {username, password} = value
+        const user = await reqLogin(username, password)
+        memoryUtil.user = user // 存入变量
+        storageUtil.saveUSer(user) //存入缓存
+        message.success('登录成功')
+        // // this.props.history.push('/')  push是可以回退到上一页的
+        this.props.history.replace('/') // replace是不可以回退到上一页的
     }
     render() {
+        // 如果用户登录了就去管理后台
+        const user = memoryUtil.user
+        if(user && user._id) {
+            return <Redirect to='/' />
+        }
         return (
             <div className="login">
                 <div className="loginback">
@@ -34,13 +46,13 @@ const taber = {
                                     >
                                         <Form.Item
                                             style={{margin:'10% 0',backgroundColor:'#eee'}}
-                                            name="user_name"
+                                            name="username"
                                             rules={[{ required: true, message: '请输入用户名' }]}
                                         >
                                             <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="用户名" />
                                         </Form.Item>
                                         <Form.Item
-                                            name="user_password"
+                                            name="password"
                                             rules={[{ required: true, message: '请输入密码' },
                                                     {min:4,message:"至少输入四位"}]}
                                         >

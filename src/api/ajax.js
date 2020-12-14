@@ -1,24 +1,33 @@
-/* 
-    发送异步ajax请求的模块
-    封装axios库
-    函数的返回值是promise对象
-*/
 import axios from 'axios'
-export default function ajax(url, data={}, type='GET') {
-    /* 接口带参数请求
-    axios.get('/user?ID=12345')
-    接口带主题body请求
-    axios.get('/user', {
-        params: {
-          ID: 12345
+import {message} from 'antd'
+export default function ajax(url, data={}, type='GET', book='') {
+    return new Promise((resolve,reject)=>{
+        let promise = ''
+        if(type === 'GET' || type === 'get') {
+            promise = axios.get(url,{
+                params:data 
+            })
+        }else {
+            promise = axios.post(url,data)
         }
-      }) */
-    if(type === 'GET' || type === 'get') {
-        return axios.get(url,{  // 配置对象
-            params:data // 指定参数
+        promise.then(response=>{
+            if(book === 'weather') {
+                if(response.data.code === 200) {
+                    resolve(response.data.newslist[0])
+                }else {
+                    message.error(response.data.msg)
+                }
+            }else {
+                if(response.data.status === 0) {
+                    resolve(response.data.data)
+                }else {
+                    message.error(response.data.msg)
+                }
+            }
+            
+        }).catch(error=>{
+            message.error(error.message)
         })
-    }else {
-        return axios.post(url,data)
-    }
-
+    })
+  
 }

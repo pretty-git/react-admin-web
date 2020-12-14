@@ -12,7 +12,32 @@ export default {
 }
 */
 //登录
+import { message } from 'antd'
+import jsonp from 'jsonp'
 import ajax from './ajax'
-export const reqLogin = (username, password) => ajax('/login',{username,password},'POST')
+export const reqLogin = (username, password) => ajax('/login', { username, password }, 'POST')
 // export const reqAddUser = (user) =>{ return  ajax('/mannge/user/add',user, 'POST')}
-export const reqAddUser = (user) =>ajax('/mannge/user/add',user, 'POST')
+export const reqAddUser = (user) => ajax('/mannge/user/add', user, 'POST')
+export const requestWeather = () => ajax(`http://api.tianapi.com/txapi/tianqi/index?key=822223b862e1c2c4c519d390009205d4&city=深圳`,{},'get','weather')
+// 商品分类模块
+export const getCategory = (parentId ) => ajax('/manage/category/list',{parentId})
+export const addCategory = (data) => ajax('/manage/category/add',data,'post')
+export const updataCategory = (data) => ajax('manage/category/update',data,'post')
+
+
+/**
+ * @description jsonp 的包装
+ */
+export const requestWeather_jsonp = (city) => {
+    return new Promise((resolve, reject) => {
+        const url = `https://api.seniverse.com/v3/weather/now.json?key=SQHiSnuSXVOy549Ai&location=shenzhen&language=zh-Hans&unit=c`
+        jsonp(url, {}, (err, data) => {
+            if (!err) {
+                resolve(data)
+            } else {
+                message.error('获取天气信息失败')
+            }
+        })
+    })
+}
+// requestWeather_jsonp('深圳')

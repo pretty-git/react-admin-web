@@ -1,16 +1,15 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import Login from './pages/login/login'
-import Admin from './pages/admin/admin'
+import Login from './pages/login'
+import Admin from './pages/admin'
+import './utils/common.less'
 function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path='/' component={Login}></Route>
-        <Route path='/admin' component={Admin}></Route>
+        <Route path='/login' component={Login}></Route>
+        <Route path='/' component={Admin}></Route>
       </Switch>
-
-
     </BrowserRouter>
   );
 }
