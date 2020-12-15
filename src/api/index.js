@@ -28,9 +28,9 @@ export const updataCategory = (data) => ajax('manage/category/update',data,'post
 /**
  * @description jsonp 的包装
  */
-export const requestWeather_jsonp = (city) => {
+export const requestWeather_jsonp = () => {
     return new Promise((resolve, reject) => {
-        const url = `https://api.seniverse.com/v3/weather/now.json?key=SQHiSnuSXVOy549Ai&location=shenzhen&language=zh-Hans&unit=c`
+        const url = `http://api.tianapi.com/txapi/tianqi/index?key=822223b862e1c2c4c519d390009205d4&city=深圳`
         jsonp(url, {}, (err, data) => {
             if (!err) {
                 resolve(data)

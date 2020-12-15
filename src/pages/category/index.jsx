@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Card, Table, Modal } from 'antd';
+import { Button, Card, Table, Modal, message } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { getCategory, addCategory, updataCategory } from '../../api/index'
 import AddForm from './form'
@@ -13,11 +13,22 @@ export default class Category extends React.Component {
         categoryName: '',
         parentId: '0',
         parentName: "",
-        modalName:'新增一级分类'
+        modalName: '新增一级分类',
+        ifFirst: true, // 是否位于一级页面
+        currentName: "",
+        currentId: '',
+        changeNameValue: '' // 编辑的名字的值
     };
     getList = (parentId, name = "") => {
+        if(name) {
+            this.setState({
+                ifFirst:false
+            })
+        }
         getCategory(parentId).then(res => {
             this.setState({
+                currentName: name,
+                currentId: parentId,
                 parentName: name,
                 parentId,
                 categoryList: res
@@ -32,39 +43,57 @@ export default class Category extends React.Component {
     })*/
     addNew = () => {
         this.setState({
-            modalName:'新增一级分类',
+            modalName: this.state.ifFirst?'新增一级分类':'新增二级分类',
             visible: true,
+            currentId: this.state.ifFirst?'0':this.state.currentId,
+            currentName: ''
         });
     }
-    editItem = (id,name) => {
+    editItem = (id, name) => {
         this.setState({
-            modalName:'修改一级分类',
+            modalName: '修改分类',
             visible: true,
+            currentName: name,
+            currentId: id,
+            changeNameValue:name
         })
-       
     }
-    handleOk = (id='0',name='') => {
-        if(this.state.modalName === '新增一级分类') {
+    handleOk = () => {
+       const changeValue = this.formRef.current.getFieldValue('categoryName')
+        if (this.state.modalName === '新增一级分类' || this.state.modalName === '新增二级分类') {
             let data = {
-                parentId: '0',
-                categoryName: name,
+                parentId: this.state.modalName === '新增一级分类'?'0':this.state.currentId,
+                categoryName: changeValue,
             }
-            addCategory(data)
-        }else {
+            
+            addCategory(data).then(res => {
+                message.success('操作成功')
+                this.getList(data.parentId,this.state.parentName)
+                this.setState({
+                    ifFirst: this.state.modalName === '新增一级分类'?true:false
+                })
+            })
+        } else if(this.state.modalName === '修改分类') { //更新分类
             let data = {
-                categoryId : id,
-                categoryName: name,
+                categoryId: this.state.currentId,
+                categoryName: changeValue,
             }
-            updataCategory(data)
+          
+            updataCategory(data).then(res => {
+                message.success('操作成功')
+                this.getList()
+                this.setState({
+                    ifFirst: true
+                })
+            })
         }
-       
         this.setState({
             visible: false,
         });
     }
     hideModal = () => {
         this.setState({
-            visible: false,
+            visible: false
         });
     };
     /**
@@ -83,9 +112,10 @@ export default class Category extends React.Component {
                 key: 'x',
                 render: (record) => (
                     <div className="display_row">
-                        <div className="link_btn" onClick={()=>{this.editItem(record._id,record.name)}}>修改分类</div>
+                        <div className="link_btn" onClick={() =>
+                             { this.editItem(record._id, record.name) }}>修改分类</div>
                         {/* 如果像事件回调函数传递参数,先定义匿名函数,再在回调中调用函数,就不是rendder一直调用该函数了 */}
-                        <div hidden={this.state.parentId !== '0'} className="link_btn"
+                        <div hidden={!this.state.ifFirst} className="link_btn"
                             onClick={() => { this.getList(record._id, record.name) }}>查看子分类</div></div>)
             },
         ];
@@ -102,7 +132,7 @@ export default class Category extends React.Component {
         const leftTitle = (<div className="display_row">
             <div className={this.state.parentName ? 'link_btn' : ''} style={{ marginRight: '10px' }}
                 onClick={() => { this.getList('0') }}>一级分类列表</div>
-            <span hidden={!this.state.parentName} style={{ marginRight: '10px' }}>/</span>
+            <span hidden={this.state.ifFirst} style={{ marginRight: '10px' }}>/</span>
             {this.state.parentName}
         </div>)
         const rightTitle = (
@@ -126,7 +156,13 @@ export default class Category extends React.Component {
                     visible={this.state.visible}
                     onOk={this.handleOk}
                     onCancel={this.hideModal}>
-                        <AddForm></AddForm>
+                    <AddForm id={this.state.currentId}
+                        ifFirst = {this.state.ifFirst}
+                        name={this.state.currentName}
+                        setForm={(form) => this.formRef = form}
+                        >
+                            
+                    </AddForm>
                 </Modal>
             </div>
         )

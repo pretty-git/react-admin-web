@@ -98,7 +98,7 @@ class topHeader extends React.Component {
 
     componentDidMount() {
         this.getCurrent()
-        this.getWeather()
+        // this.getWeather()
 
     }
     /**
