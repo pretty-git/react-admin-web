@@ -25,7 +25,7 @@ export default class AddForm extends React.Component {
                 <Form.Item
                     label="分类名称"
                     name="categoryName"
-                    
+                    rules={[{ required: true, message: '分类名称必须输入' }]}
                 >
                     <Input placeholder="请输入" style={{ width: 300 }}></Input>
                 </Form.Item>

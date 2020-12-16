@@ -20,7 +20,7 @@ export default class Category extends React.Component {
         changeNameValue: '' // 编辑的名字的值
     };
     getList = (parentId, name = "") => {
-        if(name) {
+        if(parentId!=='0') {
             this.setState({
                 ifFirst:false
             })
@@ -60,6 +60,10 @@ export default class Category extends React.Component {
     }
     handleOk = () => {
        const changeValue = this.formRef.current.getFieldValue('categoryName')
+       if(!changeValue) {
+            message.error("请输入分类名称")
+            return
+       }
         if (this.state.modalName === '新增一级分类' || this.state.modalName === '新增二级分类') {
             let data = {
                 parentId: this.state.modalName === '新增一级分类'?'0':this.state.currentId,
@@ -155,6 +159,8 @@ export default class Category extends React.Component {
                 <Modal title={this.state.modalName}
                     visible={this.state.visible}
                     onOk={this.handleOk}
+                    okText="提交"
+                    cancelText="取消"
                     onCancel={this.hideModal}>
                     <AddForm id={this.state.currentId}
                         ifFirst = {this.state.ifFirst}
