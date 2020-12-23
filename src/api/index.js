@@ -23,8 +23,10 @@ export const requestWeather = () => ajax(`http://api.tianapi.com/txapi/tianqi/in
 export const getCategory = (parentId ) => ajax('/manage/category/list',{parentId})
 export const addCategory = (data) => ajax('/manage/category/add',data,'post')
 export const updataCategory = (data) => ajax('manage/category/update',data,'post')
-
-
+//商品管理模块
+export const getProduct = (data) => ajax('/manage/product/list',data)
+export const searchList = (data) => ajax('manage/product/search',data)
+export const deleteImg = (name) => ajax('/manage/img/delete',{name},'post')
 /**
  * @description jsonp 的包装
  */
