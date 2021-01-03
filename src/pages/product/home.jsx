@@ -1,7 +1,7 @@
 import React from 'react'
-import { Select, Input, Button, Card, Table } from 'antd'
-import { SearchOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { getProduct, searchList } from '../../api/index'
+import { Select, Input, Button, Table, message } from 'antd'
+import {  PlusCircleOutlined } from '@ant-design/icons';
+import { getProduct, searchList, put_down_Product } from '../../api/index'
 const { Option } = Select;
 const { Search } = Input;
 
@@ -21,6 +21,7 @@ export default class Home extends React.Component {
         this.setState({
             searchType: e
         })
+ 
     }
     /**
      *@description 搜索
@@ -48,7 +49,7 @@ export default class Home extends React.Component {
         })
         let data = {
             pageNum: this.state.pageNum,
-            pageSize: 10
+            pageSize: 3
         }
         let { total, list } = await getProduct(data)
         this.setState({
@@ -57,8 +58,10 @@ export default class Home extends React.Component {
             total
         })
     }
-    addNew = () => {
-
+    editItem = async(res) => {
+       await put_down_Product({productId :res._id,status:res.status === 1?2:1})
+       message.success(res.status === 1?'上架成功':'下架成功')
+       this.getList()
     }
     /**
      * @description 初始化表格列的数组
@@ -84,11 +87,11 @@ export default class Home extends React.Component {
             {
                 title: '状态',
                 dataIndex: 'status',
-                render: (status) => {
+                render: (status,record) => {
                     return (
                         <div >
-                            <Button type='primary' style={{ color: "#fff" }} className="link_btn" onClick={() => { this.editItem() }}>{status == 1 ? '上架' : '下架'}</Button>
-                            <div className="link_btn" style={{ color: "#000" }}>{status == 1 ? '已下架' : '在售'}</div>
+                            <Button type='primary' style={{ color: "#fff" }} className="link_btn" onClick={() => { this.editItem(record) }}>{status === 1 ? '上架' : '下架'}</Button>
+                            <div className="link_btn" style={{ color: "#000" }}>{status === 1 ? '已下架' : '在售'}</div>
                         </div>)
                 }
             },
@@ -98,15 +101,21 @@ export default class Home extends React.Component {
                 key: 'x',
                 render: (record) => (
                     <div className="display_row">
-                        <div className="link_btn" onClick={()=>this.props.history.push(`/product/addupdate?id=${record.id}`)}>详情</div>
                         <div className="link_btn"
-                            onClick={()=>this.props.history.push(`/product/addupdate?id=${record._id}`)} >修改</div>
+                             onClick={() => this.props.history.push('/product/detail',record)}>详情</div>
+                        <div className="link_btn"
+                             onClick={() => this.props.history.push('/product/addupdate',record)} >修改</div>
                     </div>)
             },
         ];
     }
     getChange = (e) => {
-        console.log(e)
+        this.setState({
+            pageNum:e
+        },()=>{
+            this.getList()
+        })
+        
     }
     componentDidMount() {
         this.getList()
@@ -126,8 +135,8 @@ export default class Home extends React.Component {
                 </Select>
                 <Search placeholder="请输入" style={{ width: 250, margin: '0 10px' }}
                     onSearch={this.getValue} enterButton />
-                <Button type="primary" icon={<PlusCircleOutlined />} style={{ float: 'right' }} 
-                    onClick={()=>this.props.history.push('/product/addupdate')}>
+                <Button type="primary" icon={<PlusCircleOutlined />} style={{ float: 'right' }}
+                    onClick={() => this.props.history.push('/product/addupdate')}>
                     添加商品
                 </Button>
                 <Table
@@ -137,7 +146,7 @@ export default class Home extends React.Component {
                     dataSource={this.state.productList}
                     bordered
                     rowKey={record => record._id}
-                    pagination={{ current: this.state.pageNum, total: this.state.total, onChange: this.getChange }}
+                    pagination={{ current: this.state.pageNum,pageSize:3, total: this.state.total, onChange: this.getChange }}
                 />
             </div>
         )

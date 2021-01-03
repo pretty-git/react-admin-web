@@ -13,7 +13,7 @@ const { SubMenu } = Menu;
         this.current = e.key
     };
     /**
-     * @descript 根据路由数组生成对应的标签数组 
+     * @descript 根据路由数组生成对应的标签数组 map方法写
      */
     getMenuList_map = (menuList) => {
         return menuList.map(item => {
@@ -32,6 +32,9 @@ const { SubMenu } = Menu;
             }
         })
     };
+     /**
+     * @descript 根据路由数组生成对应的标签数组 reduce方法写
+     */
     getMenuList = (menuList) => {
         return menuList.reduce((pre, item) => {
             if (!item.children) {
@@ -41,7 +44,7 @@ const { SubMenu } = Menu;
                 </Menu.Item>)
             } else {
                 // 拿到有父级的子菜单的父级key
-               let cur = item.children.find(items=>items.key === this.props.location.pathname)
+               let cur = item.children.find(items=>this.props.location.pathname.indexOf(items.key) === 0) // 页面下的子路由也要默认打开
                if(cur) {
                    this.curpa = cur?item.key:''
                }
@@ -63,7 +66,10 @@ const { SubMenu } = Menu;
     render() {
         // 保证路由地址为空时默认选中首页
         this.current = this.props.location.pathname
-       
+        // 子路由也要选择
+        if(this.current.indexOf('/product') === 0) {
+            this.current = '/product'
+        }
         return (
             <div className='main_bd'>
                 <Link to='/' className="display_row all_center color">

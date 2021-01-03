@@ -47,7 +47,9 @@ class topHeader extends React.Component {
                 if (item.children) {
                     this.getTitle(item.children, pathName)
                 }
+                return []
             }
+           
         })
         if (items) {
             this.pathName = items.title

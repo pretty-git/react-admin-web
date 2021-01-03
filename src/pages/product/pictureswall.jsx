@@ -1,7 +1,7 @@
 import React from 'react'
 import { Upload, Modal, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import {deleteImg} from '../../api/index'
+import { deleteImg } from '../../api/index'
 function getBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -17,11 +17,11 @@ export default class Pictures extends React.Component {
         previewTitle: '',
         fileList: [],
     };
-    
+
     handleCancel = () => this.setState({ previewVisible: false });
     // 获取图片数组
     getImgList = () => {
-      return  this.state.fileList.map(item => item.name)
+        return this.state.fileList.map(item => item.name)
     }
     handlePreview = async file => {
         if (!file.url && !file.preview) {
@@ -37,25 +37,33 @@ export default class Pictures extends React.Component {
     /**
      * @description 操作修改上传后的图片的信息
      */
-    handleChange =  async({ file,fileList }) => { 
-        let files = fileList[fileList.length-1]
-        if(file.status === 'done') {
+    handleChange = async ({ file, fileList }) => {
+        let files = fileList[fileList.length - 1]
+        if (file.status === 'done') {
             files.name = file.response.data.name
             files.url = file.response.data.url
-            if(file.response.status != 0) {
+            if (file.response.status !== 0) {
                 message.error('上传失败')
-            }else {
+            } else {
                 message.success('上传成功')
             }
-        }else if(file.status === "removed") {
+        } else if (file.status === "removed") {
             await deleteImg(file.name)
             message.success('删除成功')
         }
         this.setState({ fileList })
     }
+    componentDidMount() {
+        // 获取会延时
+        setTimeout(() => {
+            this.setState({
+                fileList: this.props.fileList
+            })
+        })
 
+    }
     render() {
-        const { previewVisible, previewImage, fileList, previewTitle } = this.state;
+        let { previewVisible, previewImage, fileList, previewTitle } = this.state;
         const uploadButton = (
             <div>
                 <PlusOutlined />
