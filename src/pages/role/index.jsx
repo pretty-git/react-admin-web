@@ -4,6 +4,8 @@ import { getRoleList,addRole,updateRole } from '../../api/index'
 import Addfrom from './addrole_form'
 import Limitform from './limit_role'
 import Stroage from '../../utils/storageUtil'
+import {FormData} from '../../utils/timeUtil'
+import memoryUtil from '../../utils/memoryUtil.js';
 // 父组件读取子组件的数据步骤
 const ref = React.createRef();
 export default class Role extends React.Component {
@@ -16,6 +18,7 @@ export default class Role extends React.Component {
         roleList: [],
         roleName: '',
         currentRole:'',
+        curretKey:'',
         menu: [], // 角色权限暂存
         ifShowBtn: true //按钮权限
     }
@@ -33,17 +36,19 @@ export default class Role extends React.Component {
                 title: '创建时间',
                 align: 'left',
                 render: (item) => {
-                    return item.create_time
+                    return FormData(item.create_time) 
                 }
             },
             {
                 title: '授权时间',
-                dataIndex: 'auth_name',
                 align: 'left',
+                render: (item) => {
+                    return FormData(item.create_time) 
+                }
             },
             {
                 title: '授权人',
-                dataIndex: 'auth_time',
+                dataIndex: 'auth_name',
                 align: 'left',
             }
         ];
@@ -75,6 +80,13 @@ export default class Role extends React.Component {
             auth_time:user.create_time,
             auth_name:user.username
         })
+        if(memoryUtil.user.role_id === this.state.currentRole._id) {
+            memoryUtil.user = {}
+            Stroage.removeUser()
+            this.props.history.replace('/login')
+            message.warning("该角色已更新权限，请重新登录")
+            return
+        }
         message.success("设置成功")
         this.hideModal()
         this.getList()
@@ -92,8 +104,9 @@ export default class Role extends React.Component {
        this.setState({
            roleName: selectedRows[0].name,
            ifShowBtn:false,
-           menu:selectedRows[0].menus,
-           currentRole:selectedRows[0]
+           curretKey:key,
+           currentRole:selectedRows[0],
+           menu:selectedRows[0].menus
        })
     }
     // 调用一次
@@ -110,12 +123,19 @@ export default class Role extends React.Component {
                     创建角色
                  </Button>
                 <Button type="primary" onClick={() => { 
+                    // 为了让弹窗时拿到最新的权限展示
+                    let key = this.state.curretKey
+                    let index = this.state.roleList.findIndex(item=>{return item._id == key})
+                    this.setState({
+                        menu:this.state.roleList[index].menus
+                    })
                     if(this.state.roleName) {
                         this.setState({ limitVisible: true })
                     }else {
                         this.setState({ ifShowBtn:false })
                     }
-                    
+                  
+                    // this.onChange()
                  }} disabled={this.state.ifShowBtn}>
                     设置角色权限
             </Button>

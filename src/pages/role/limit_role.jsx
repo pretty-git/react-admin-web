@@ -5,10 +5,10 @@ import menuList from '../../config/menuConfig'
 export default class Limitform extends React.Component {
     formRef = React.createRef();
     state = {
-        treeData: [],
-        checkedKey:'',
-        defaultMenu:[]
+        checkedKey:[],
+        treeData:[]
     }
+        
     onCheck = checkedKeys => {
         this.setState({
             checkedKey:checkedKeys
@@ -48,13 +48,18 @@ export default class Limitform extends React.Component {
         return menlist
 
     }
-    // 监听，根据新传入的menu来更新，更新的时候才会调用，初始显示不会调用
-    // UNSAFE_componentWillReceiveProps(nextProps) {
-    //     this.setState({
-    //         defaultMenu:nextProps.menu
-    //     })
-    //     console.log(this.state.defaultMenu)
-    // }
+    // 第一次获取menu
+    componentDidMount() {
+        this.setState({
+            checkedKey:this.props.menu
+        })
+    }
+    // 再根据新传入的role来更新状态 // 不然会出现点击不了
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        this.setState({
+            checkedKey:nextProps.menu
+        })
+     }
     UNSAFE_componentWillMount() {
         this.props.setForm(this.formRef)
         let menuLists = [{
@@ -67,9 +72,10 @@ export default class Limitform extends React.Component {
             treeData: menuLists
         })
     }
+    
     render() {
         this.getName()
-        const defaultMenu = [...this.props.menu]
+        const {checkedKey} = this.state
         return (
             <Form
                 ref={this.formRef}
@@ -87,7 +93,7 @@ export default class Limitform extends React.Component {
                     name="tree"
                 >
                     <Tree
-                        checkedKeys={defaultMenu}
+                        checkedKeys={checkedKey}
                         checkable
                         defaultExpandAll={true}
                         onCheck={this.onCheck}

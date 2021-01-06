@@ -35,6 +35,12 @@ export const put_down_Product = (data) => ajax('/manage/product/updateStatus',da
 export const getRoleList = () => ajax('manage/role/list')
 export const addRole = (roleName) => ajax('manage/role/add',{roleName},'post')
 export const updateRole = (data) => ajax('manage/role/update',data,'post')
+// 用户模块
+export const getUserList = () => ajax('manage/user/list')
+export const addUser = (data) => ajax('manage/user/add',data,'post')
+export const updateUser = (data) => ajax('manage/user/update',data,'post')
+export const deleteUser = (userId) => ajax('manage/user/delete',{userId},'post')
+
 
 /**
  * @description jsonp 的包装
