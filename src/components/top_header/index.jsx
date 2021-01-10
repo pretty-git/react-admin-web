@@ -1,14 +1,13 @@
 import React from 'react'
-import memory from '../../utils/memoryUtil.js'
 import { requestWeather } from '../../api/index.js'
+import {connect} from 'react-redux'
 import './index.less'
 import { getTime } from '../../utils/timeUtil'
 import menuList from '../../config/menuConfig'
 import { Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom'
-import localUtil from '../../utils/storageUtil'
-import memoryUtil from '../../utils/memoryUtil'
+import {logout} from '../../redux/actions'
 class topHeader extends React.Component {
     state = {
         clicked: false,
@@ -78,9 +77,7 @@ class topHeader extends React.Component {
             cancelText:'取消',
             okText:"确定",
             onOk() {
-                localUtil.removeUser()
-                memoryUtil.user = {}
-                that.props.history.replace('/login')
+                that.props.logout()
             }
         });
     }
@@ -115,10 +112,13 @@ class topHeader extends React.Component {
         this.getTitle(menuList, pathName)
         return (
             <div className="display_row main_hd all_center">
-                {/* {this.pathName} ---- */}
+                <div style={{marginLeft:30}}>
+                 {this.props.headTitle} 
+                </div>
+               
                 <div className="weather">{this.state.currentTime} {this.state.weather.week} 🌤 {this.state.weather.weather} {this.state.weather.real}</div>
                 <div>
-                    欢迎,{memory.user.username}
+                    欢迎,{this.props.user.username}
                 </div>
                 <div className="link_btn" onClick={this.showConfirm}>退出登录</div>
 
@@ -127,4 +127,8 @@ class topHeader extends React.Component {
     }
 }
 // 让这个页面拥有this.props.location.pathname的功能
-export default withRouter(topHeader) 
+
+export default connect(
+    state => ({headTitle:state.headTitle,user:state.user}),
+    {logout}
+)(withRouter(topHeader))

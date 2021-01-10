@@ -26,22 +26,26 @@ export default class Home extends React.Component {
     /**
      *@description 搜索
      */
-    getValue = async (value) => {
+    getValue =  (value) => {
         this.setState({
             loading: true
         })
-
-        let data = {
-            pageNum: this.state.pageNum,
-            pageSize: 10,
-            [this.state.searchType]: value
-        }
-        let { total, list } = await searchList(data)
         this.setState({
-            loading: false,
-            productList: list,
-            total
+            pageNum:1
+        },async()=>{
+            let data = {
+                pageNum: this.state.pageNum,
+                pageSize: 10,
+                [this.state.searchType]: value
+            }
+            let { total, list } = await searchList(data)
+            this.setState({
+                loading: false,
+                productList: list,
+                total
+            })
         })
+       
     }
     getList = async () => {
         this.setState({

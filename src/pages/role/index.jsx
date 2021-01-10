@@ -5,10 +5,11 @@ import Addfrom from './addrole_form'
 import Limitform from './limit_role'
 import Stroage from '../../utils/storageUtil'
 import {FormData} from '../../utils/timeUtil'
-import memoryUtil from '../../utils/memoryUtil.js';
+import {connect} from 'react-redux'
+import {logout} from '../../redux/actions'
 // 父组件读取子组件的数据步骤
 const ref = React.createRef();
-export default class Role extends React.Component {
+class Role extends React.Component {
     /**
     * @description 初始化所有表格标题栏
     */
@@ -80,10 +81,8 @@ export default class Role extends React.Component {
             auth_time:user.create_time,
             auth_name:user.username
         })
-        if(memoryUtil.user.role_id === this.state.currentRole._id) {
-            memoryUtil.user = {}
-            Stroage.removeUser()
-            this.props.history.replace('/login')
+        if(this.props.user.role_id === this.state.currentRole._id) {
+            this.props.logout()
             message.warning("该角色已更新权限，请重新登录")
             return
         }
@@ -183,3 +182,6 @@ export default class Role extends React.Component {
         )
     }
 }
+export default connect(
+    state => ({user:state.user}),{logout}
+)(Role)

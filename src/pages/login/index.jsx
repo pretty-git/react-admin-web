@@ -3,10 +3,9 @@ import { Form, Input, Button, Tabs, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './index.less'
 import src from '../../resource/images/2.jpg'
-import {reqLogin} from '../../api'
-import memoryUtil from '../../utils/memoryUtil.js'
-import storageUtil from '../../utils/storageUtil.js'
+import {login} from '../../redux/actions'
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 const { TabPane } = Tabs;
 function callback(key) {
     console.log(key);
@@ -18,18 +17,16 @@ const taber = {
  class Login extends React.Component {
     onFinish = async value =>{
         let {username, password} = value
-        const user = await reqLogin(username, password)
-        memoryUtil.user = user // 存入变量
-        storageUtil.saveUSer(user) //存入缓存
-        message.success('登录成功')
-        // // this.props.history.push('/')  push是可以回退到上一页的
-        this.props.history.replace('/') // replace是不可以回退到上一页的
+        this.props.login(username, password) 
+       // this.props.history.push('/')  push是可以回退到上一页的
+        //  this.props.history.replace('/home') // replace是不可以回退到上一页的
+    
     }
     render() {
         // 如果用户登录了就去管理后台
-        const user = memoryUtil.user
+        const user = this.props.user
         if(user && user._id) {
-            return <Redirect to='/' />
+            return <Redirect to='/home' />
         }
         return (
             <div className="login">
@@ -86,4 +83,7 @@ const taber = {
         )
     }
 }
-export default Login
+export default connect(
+    state => ({user:state.user}),
+    {login}
+)(Login) 

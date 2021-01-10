@@ -1,9 +1,9 @@
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
-import memoryUtil from '../../utils/memoryUtil.js'
 import { Layout } from 'antd';
 import LeftNav from '../../components/left_nav';
 import TopHeader from '../../components/top_header';
+import {connect} from 'react-redux'
 import './index.less'
 // 页面路由部分
 import Home from '../home'
@@ -16,9 +16,10 @@ import User from '../user'
 import Product from '../product'
 const { Header, Footer, Sider, Content } = Layout;
 /* 管理路由组件 */
-export default class Admin extends React.Component {
+ class Admin extends React.Component {
     render() {
-        const user = memoryUtil.user
+       const user = this.props.user
+       console.log( this.props.user)
         if (!user._id || !user) { // 当前没有登录
             // 自动跳转到登录（在render（）中）
             return <Redirect to='/login' />
@@ -54,3 +55,6 @@ export default class Admin extends React.Component {
         )
     }
 }
+export default connect(
+    state => ({user:state.user}),{}
+)(Admin) 
