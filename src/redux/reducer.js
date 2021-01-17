@@ -10,7 +10,7 @@ import {
     RESET_USER
 } from './action-types'
 //  头部标题
-const initHeadeTitle = '首页'
+const initHeadeTitle = ''
  function headTitle(state=initHeadeTitle, action) {
     switch (action.type) {
         case SET_HEAD_TITLE:

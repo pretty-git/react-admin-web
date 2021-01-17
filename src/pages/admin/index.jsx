@@ -14,6 +14,7 @@ import Pie from '../charts/pie'
 import Role from '../role'
 import User from '../user'
 import Product from '../product'
+import NotFound from '../notfound'
 const { Header, Footer, Sider, Content } = Layout;
 /* 管理路由组件 */
  class Admin extends React.Component {
@@ -36,6 +37,8 @@ const { Header, Footer, Sider, Content } = Layout;
                     <Content className="main_bd">
                         {/* 配置路由 地址栏输入后去下面寻找匹配*/}
                         <Switch>
+                            <Redirect exact={true} from="/" to='/home' /> 
+                            {/* exact代表精准匹配 */}
                             <Route path='/home' component={Home} />
                             <Route path='/category' component={Category} />
                             <Route path='/charts/bar' component={Bar} />
@@ -45,7 +48,7 @@ const { Header, Footer, Sider, Content } = Layout;
                             <Route path='/user' component={User} />
                             <Route path='/product' component={Product} />
                             {/* 默认页面 */}
-                            <Redirect to='/home' />
+                            <Route component={NotFound} />
                         </Switch>
                         
                     </Content>

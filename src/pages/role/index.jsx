@@ -124,7 +124,7 @@ class Role extends React.Component {
                 <Button type="primary" onClick={() => { 
                     // 为了让弹窗时拿到最新的权限展示
                     let key = this.state.curretKey
-                    let index = this.state.roleList.findIndex(item=>{return item._id == key})
+                    let index = this.state.roleList.findIndex(item=>{return item._id === key})
                     this.setState({
                         menu:this.state.roleList[index].menus
                     })

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Button, Tabs, message } from 'antd'
+import { Form, Input, Button, Tabs } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './index.less'
 import src from '../../resource/images/2.jpg'
