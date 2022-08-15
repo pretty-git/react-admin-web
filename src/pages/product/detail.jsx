@@ -57,7 +57,7 @@ export default class Detail extends React.Component {
                         <span className="item_left">商品图片：</span>
                         {
                             product.imgs.map((item,index) => {
-                                return <img className="img" key={index} src={'http://localhost:5000/upload/' + item} alt="描述" />
+                                return <img className="img" key={index} src={'http://localhost:4000/upload/' + item} alt="描述" />
                             })
                         }
                     </List.Item>

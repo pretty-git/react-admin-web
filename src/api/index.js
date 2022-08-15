@@ -2,14 +2,6 @@
 包含应用中所有接口请求函数的模块
 */
 /*
-统一暴露
-export default {
-    xx() {
-    },
-    yyZ() {
-
-    }
-}
 */
 //登录
 import { message } from 'antd'

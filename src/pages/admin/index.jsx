@@ -20,7 +20,6 @@ const { Header, Footer, Sider, Content } = Layout;
  class Admin extends React.Component {
     render() {
        const user = this.props.user
-       console.log( this.props.user)
         if (!user._id || !user) { // 当前没有登录
             // 自动跳转到登录（在render（）中）
             return <Redirect to='/login' />

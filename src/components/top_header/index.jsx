@@ -111,14 +111,10 @@ class topHeader extends React.Component {
         const pathName = this.props.location.pathname
         this.getTitle(menuList, pathName)
         return (
-            <div className="display_row main_hd all_center">
-                <div style={{marginLeft:30}}>
-                 {this.props.headTitle} 
-                </div>
-               
+            <div className="display_row main_hd all_center">               
                 <div className="weather">{this.state.currentTime} {this.state.weather.week} 🌤 {this.state.weather.weather} {this.state.weather.real}</div>
                 <div>
-                    欢迎,{this.props.user.username}
+                    欢迎, {this.props.user.username}
                 </div>
                 <div className="link_btn" onClick={this.showConfirm}>退出登录</div>
 
@@ -129,6 +125,6 @@ class topHeader extends React.Component {
 // 让这个页面拥有this.props.location.pathname的功能
 
 export default connect(
-    state => ({headTitle:state.headTitle,user:state.user}),
+    state => ({headTitle:state.headTitle, user:state.user}),
     {logout}
 )(withRouter(topHeader))

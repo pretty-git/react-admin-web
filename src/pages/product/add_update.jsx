@@ -120,7 +120,7 @@ export default class AddUpdate extends React.Component {
                     uid: item,
                     status: 'done',
                     name: '111',
-                    url: 'http://localhost:5000/upload/' + item
+                    url: 'http://localhost:4000/upload/' + item
                 }
             })
         }

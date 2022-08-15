@@ -11,17 +11,18 @@ export default function ajax(url, data={}, type='GET', book='') {
             promise = axios.post(url,data)
         }
         promise.then(response=>{
+            const {newslist, data, msg, code, status} = response.data
             if(book === 'weather') {
-                if(response.data.code === 200) {
-                    resolve(response.data.newslist[0])
+                if(code === 200) {
+                    resolve(newslist[0])
                 }else {
-                    message.error(response.data.msg)
+                    message.error(msg)
                 }
             }else {
-                if(response.data.status === 0) {
-                    resolve(response.data.data)
+                if(status === 0) {
+                    resolve(data)
                 }else {
-                    message.error(response.data.msg)
+                    message.error(msg)
                 }
             }
             

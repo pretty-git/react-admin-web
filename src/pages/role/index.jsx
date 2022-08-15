@@ -19,7 +19,7 @@ class Role extends React.Component {
         roleList: [],
         roleName: '',
         currentRole:'',
-        curretKey:'',
+        currentKey:'',
         menu: [], // 角色权限暂存
         ifShowBtn: true //按钮权限
     }
@@ -103,7 +103,7 @@ class Role extends React.Component {
        this.setState({
            roleName: selectedRows[0].name,
            ifShowBtn:false,
-           curretKey:key,
+           currentKey:key[0],
            currentRole:selectedRows[0],
            menu:selectedRows[0].menus
        })
@@ -123,18 +123,21 @@ class Role extends React.Component {
                  </Button>
                 <Button type="primary" onClick={() => { 
                     // 为了让弹窗时拿到最新的权限展示
-                    let key = this.state.curretKey
+                    let key = this.state.currentKey
                     let index = this.state.roleList.findIndex(item=>{return item._id === key})
-                    this.setState({
-                        menu:this.state.roleList[index].menus
-                    })
+                    if(index > -1) {
+                        this.setState({
+                            menu:this.state.roleList[index].menus
+                        })
+                    }
+                    
                     if(this.state.roleName) {
                         this.setState({ limitVisible: true })
                     }else {
                         this.setState({ ifShowBtn:false })
                     }
                   
-                    // this.onChange()
+                    
                  }} disabled={this.state.ifShowBtn}>
                     设置角色权限
             </Button>
